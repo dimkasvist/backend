@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-update-likes-to-media
+      author: cascade
+      preConditions:
+        - onFail: CONTINUE
+        - tableExists:
+            tableName: likes
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: likes
+            constraintName: fk_likes_photo_id
+        - dropIndex:
+            tableName: likes
+            indexName: idx_likes_photo_id
+        - dropUniqueConstraint:
+            tableName: likes
+            constraintName: uk_likes_user_photo
+        - addColumn:
+            tableName: likes
+            columns:
+              - column:
+                  name: media_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: likes
+            baseColumnNames: media_id
+            referencedTableName: media
+            referencedColumnNames: id
+            constraintName: fk_likes_media_id
+            onDelete: CASCADE
+        - addUniqueConstraint:
+            tableName: likes
+            columnNames: user_id, media_id
+            constraintName: uk_likes_user_media
+        - dropColumn:
+            columnName: photo_id
+            tableName: likes

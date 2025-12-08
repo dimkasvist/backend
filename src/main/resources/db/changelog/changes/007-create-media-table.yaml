@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-create-media-table
+      author: cascade
+      changes:
+        - createTable:
+            tableName: media
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(1000)
+              - column:
+                  name: file_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_path
+                  type: VARCHAR(1024)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content_type
+                  type: VARCHAR(100)
+              - column:
+                  name: file_size
+                  type: BIGINT
+              - column:
+                  name: duration_seconds
+                  type: BIGINT
+              - column:
+                  name: width
+                  type: INT
+              - column:
+                  name: height
+                  type: INT
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            baseTableName: media
+            baseColumnNames: user_id
+            constraintName: fk_media_users
+            referencedTableName: users
+            referencedColumnNames: id
+        - createIndex:
+            tableName: media
+            indexName: idx_media_created_id
+            columns:
+              - column:
+                  name: created_at
+              - column:
+                  name: id

@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-update-comments-to-media
+      author: cascade
+      preConditions:
+        - onFail: CONTINUE
+        - tableExists:
+            tableName: comments
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: comments
+            constraintName: fk_comments_photo_id
+        - dropIndex:
+            tableName: comments
+            indexName: idx_comments_photo_id
+        - addColumn:
+            tableName: comments
+            columns:
+              - column:
+                  name: media_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: comments
+            baseColumnNames: media_id
+            referencedTableName: media
+            referencedColumnNames: id
+            constraintName: fk_comments_media_id
+            onDelete: CASCADE
+        - dropColumn:
+            columnName: photo_id
+            tableName: comments

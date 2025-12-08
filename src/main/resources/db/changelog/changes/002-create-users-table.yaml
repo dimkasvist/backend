@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-users-table
+      author: dimkasvist
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: google_id
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: display_name
+                  type: varchar(255)
+              - column:
+                  name: avatar_url
+                  type: varchar(500)
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+
+  - changeSet:
+      id: 002-create-users-indexes
+      author: dimkasvist
+      changes:
+        - createIndex:
+            tableName: users
+            indexName: idx_users_google_id
+            columns:
+              - column:
+                  name: google_id
+        - createIndex:
+            tableName: users
+            indexName: idx_users_email
+            columns:
+              - column:
+                  name: email

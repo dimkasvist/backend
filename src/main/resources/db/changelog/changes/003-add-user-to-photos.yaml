@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-user-to-photos
+      author: dimkasvist
+      changes:
+        - addColumn:
+            tableName: photos
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      id: 003-add-user-foreign-key
+      author: dimkasvist
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: photos
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_photos_user_id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 003-create-user-photos-index
+      author: dimkasvist
+      changes:
+        - createIndex:
+            tableName: photos
+            indexName: idx_photos_user_id
+            columns:
+              - column:
+                  name: user_id
