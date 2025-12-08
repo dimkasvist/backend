@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.dimkasvist.dimkasvist.dto.CommentLikeResponse;
 import ru.dimkasvist.dimkasvist.dto.CommentRequest;
 import ru.dimkasvist.dimkasvist.dto.CommentResponse;
 import ru.dimkasvist.dimkasvist.dto.CommentsResponse;
@@ -14,6 +15,7 @@ import ru.dimkasvist.dimkasvist.exception.ForbiddenException;
 import ru.dimkasvist.dimkasvist.exception.ResourceNotFoundException;
 import ru.dimkasvist.dimkasvist.repository.CommentRepository;
 import ru.dimkasvist.dimkasvist.repository.MediaRepository;
+import ru.dimkasvist.dimkasvist.service.CommentLikeService;
 import ru.dimkasvist.dimkasvist.service.CommentService;
 import ru.dimkasvist.dimkasvist.service.UserService;
 
@@ -28,6 +30,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final MediaRepository mediaRepository;
     private final UserService userService;
+    private final CommentLikeService commentLikeService;
 
     @Override
     @Transactional
@@ -43,7 +46,10 @@ public class CommentServiceImpl implements CommentService {
                 .build();
 
         Comment savedComment = commentRepository.save(comment);
-        return toResponse(savedComment);
+        return toResponse(savedComment, CommentLikeResponse.builder()
+                .likesCount(0)
+                .liked(false)
+                .build());
     }
 
     @Override
@@ -74,8 +80,14 @@ public class CommentServiceImpl implements CommentService {
             comments = comments.subList(0, size);
         }
 
+        List<Long> commentIds = comments.stream()
+                .map(Comment::getId)
+                .toList();
+
+        var likeInfo = commentLikeService.getLikeInfo(commentIds);
+
         List<CommentResponse> responses = comments.stream()
-                .map(this::toResponse)
+                .map(comment -> toResponse(comment, likeInfo.get(comment.getId())))
                 .toList();
 
         String nextCursor = null;
@@ -108,8 +120,11 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.delete(comment);
     }
 
-    private CommentResponse toResponse(Comment comment) {
+    private CommentResponse toResponse(Comment comment, CommentLikeResponse likeInfo) {
         User user = comment.getUser();
+        CommentLikeResponse effectiveLikeInfo = likeInfo == null
+                ? CommentLikeResponse.builder().likesCount(0).liked(false).build()
+                : likeInfo;
         return CommentResponse.builder()
                 .id(comment.getId())
                 .text(comment.getText())
@@ -119,6 +134,8 @@ public class CommentServiceImpl implements CommentService {
                         .avatarUrl(user.getAvatarUrl())
                         .build())
                 .createdAt(comment.getCreatedAt())
+                .likesCount(effectiveLikeInfo.getLikesCount())
+                .liked(effectiveLikeInfo.isLiked())
                 .build();
     }
 

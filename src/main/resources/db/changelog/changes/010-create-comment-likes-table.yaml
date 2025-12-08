@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-create-comment-likes-table
+      author: cascade
+      changes:
+        - createTable:
+            tableName: comment_likes
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: comment_likes
+            columnNames: user_id, comment_id
+            constraintName: uq_comment_likes_user_comment
+
+  - changeSet:
+      id: 010-comment-likes-foreign-keys
+      author: cascade
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: comment_likes
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_comment_likes_user_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: comment_likes
+            baseColumnNames: comment_id
+            referencedTableName: comments
+            referencedColumnNames: id
+            constraintName: fk_comment_likes_comment_id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 010-comment-likes-indexes
+      author: cascade
+      changes:
+        - createIndex:
+            tableName: comment_likes
+            indexName: idx_comment_likes_comment_id
+            columns:
+              - column:
+                  name: comment_id
+        - createIndex:
+            tableName: comment_likes
+            indexName: idx_comment_likes_user_id
+            columns:
+              - column:
+                  name: user_id

@@ -13,6 +13,8 @@ public class CommentResponse {
     private String text;
     private AuthorInfo author;
     private LocalDateTime createdAt;
+    private long likesCount;
+    private boolean liked;
 
     @Data
     @Builder
