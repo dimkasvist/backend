@@ -7,60 +7,32 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name = "media")
+@Table(name = "boards")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Media {
+public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String title;
+    private String name;
 
     @Column(length = 1000)
     private String description;
-
-    @Column(name = "file_name", nullable = false)
-    private String fileName;
-
-    @Column(name = "file_path", nullable = false)
-    private String filePath;
-
-    @Column(name = "content_type")
-    private String contentType;
-
-    @Column(name = "file_size")
-    private Long fileSize;
-
-    @Column(name = "duration_seconds")
-    private Long durationSeconds;
-
-    @Column(name = "width")
-    private Integer width;
-
-    @Column(name = "height")
-    private Integer height;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "media_tags",
-            joinColumns = @JoinColumn(name = "media_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
+    @Column(name = "is_private", nullable = false)
     @Builder.Default
-    private Set<Tag> tags = new HashSet<>();
+    private Boolean isPrivate = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

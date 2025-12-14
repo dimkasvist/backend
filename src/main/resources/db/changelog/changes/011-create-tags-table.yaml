@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-create-tags-table
+      author: dimkasvist
+      changes:
+        - createTable:
+            tableName: tags
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 011-create-media-tags-table
+      author: dimkasvist
+      changes:
+        - createTable:
+            tableName: media_tags
+            columns:
+              - column:
+                  name: media_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tag_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 011-media-tags-foreign-keys
+      author: dimkasvist
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: media_tags
+            baseColumnNames: media_id
+            referencedTableName: media
+            referencedColumnNames: id
+            constraintName: fk_media_tags_media_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: media_tags
+            baseColumnNames: tag_id
+            referencedTableName: tags
+            referencedColumnNames: id
+            constraintName: fk_media_tags_tag_id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 011-media-tags-indexes
+      author: dimkasvist
+      changes:
+        - addPrimaryKey:
+            tableName: media_tags
+            columnNames: media_id, tag_id
+            constraintName: pk_media_tags
+        - createIndex:
+            tableName: tags
+            indexName: idx_tag_name
+            unique: true
+            columns:
+              - column:
+                  name: name
+        - createIndex:
+            tableName: media_tags
+            indexName: idx_media_tags_tag_id
+            columns:
+              - column:
+                  name: tag_id

@@ -11,6 +11,7 @@ import ru.dimkasvist.dimkasvist.exception.ResourceNotFoundException;
 import ru.dimkasvist.dimkasvist.repository.CommentLikeRepository;
 import ru.dimkasvist.dimkasvist.repository.CommentRepository;
 import ru.dimkasvist.dimkasvist.service.CommentLikeService;
+import ru.dimkasvist.dimkasvist.service.NotificationService;
 import ru.dimkasvist.dimkasvist.service.UserService;
 
 import java.util.Collection;
@@ -28,6 +29,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
     private final CommentLikeRepository commentLikeRepository;
     private final CommentRepository commentRepository;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -49,6 +51,8 @@ public class CommentLikeServiceImpl implements CommentLikeService {
                     .build();
             commentLikeRepository.save(like);
             liked = true;
+            
+            notificationService.createCommentLikeNotification(comment.getUser(), currentUser, comment);
         }
 
         long likesCount = commentLikeRepository.countByCommentId(commentId);

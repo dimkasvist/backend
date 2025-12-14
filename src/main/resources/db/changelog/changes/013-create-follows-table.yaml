@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - changeSet:
+      id: 013-create-follows-table
+      author: dimkasvist
+      changes:
+        - createTable:
+            tableName: follows
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: follower_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: following_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 013-follows-foreign-keys
+      author: dimkasvist
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: follows
+            baseColumnNames: follower_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_follows_follower_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: follows
+            baseColumnNames: following_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_follows_following_id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 013-follows-indexes
+      author: dimkasvist
+      changes:
+        - createIndex:
+            tableName: follows
+            indexName: idx_follows_follower_id
+            columns:
+              - column:
+                  name: follower_id
+        - createIndex:
+            tableName: follows
+            indexName: idx_follows_following_id
+            columns:
+              - column:
+                  name: following_id
+        - createIndex:
+            tableName: follows
+            indexName: idx_follows_created_at
+            columns:
+              - column:
+                  name: created_at
+        - addUniqueConstraint:
+            tableName: follows
+            columnNames: follower_id, following_id
+            constraintName: uk_follows_follower_following

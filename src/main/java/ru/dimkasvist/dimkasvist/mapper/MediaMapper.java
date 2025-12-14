@@ -5,7 +5,11 @@ import ru.dimkasvist.dimkasvist.dto.FeedItemResponse;
 import ru.dimkasvist.dimkasvist.dto.MediaResponse;
 import ru.dimkasvist.dimkasvist.dto.MediaType;
 import ru.dimkasvist.dimkasvist.entity.Media;
+import ru.dimkasvist.dimkasvist.entity.Tag;
 import ru.dimkasvist.dimkasvist.entity.User;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class MediaMapper {
@@ -26,9 +30,9 @@ public class MediaMapper {
                 .contentType(media.getContentType())
                 .createdAt(media.getCreatedAt())
                 .author(authorInfo)
-                // Лайки/комментарии пока не связаны с media
                 .likesCount(0)
                 .commentsCount(0)
+                .tags(extractTagNames(media.getTags()))
                 .build();
     }
 
@@ -58,6 +62,7 @@ public class MediaMapper {
                 .author(authorInfo)
                 .likesCount(0)
                 .commentsCount(0)
+                .tags(extractTagNames(media.getTags()))
                 .build();
     }
 
@@ -77,5 +82,14 @@ public class MediaMapper {
                 .displayName(user.getDisplayName())
                 .avatarUrl(user.getAvatarUrl())
                 .build();
+    }
+
+    private Set<String> extractTagNames(Set<Tag> tags) {
+        if (tags == null || tags.isEmpty()) {
+            return Set.of();
+        }
+        return tags.stream()
+                .map(Tag::getName)
+                .collect(Collectors.toSet());
     }
 }

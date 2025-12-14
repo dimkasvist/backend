@@ -26,6 +26,25 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
 
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    default-encoding: UTF-8
+
+  task:
+    execution:
+      pool:
+        core-size: 2
+        max-size: 5
+
 app:
   s3:
     endpoint: ${S3_ENDPOINT:http://localhost:9000}

@@ -15,6 +15,7 @@ import ru.dimkasvist.dimkasvist.mapper.MediaMapper;
 import ru.dimkasvist.dimkasvist.repository.LikeRepository;
 import ru.dimkasvist.dimkasvist.repository.MediaRepository;
 import ru.dimkasvist.dimkasvist.service.LikeService;
+import ru.dimkasvist.dimkasvist.service.NotificationService;
 import ru.dimkasvist.dimkasvist.service.UserService;
 
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ public class LikeServiceImpl implements LikeService {
     private final MediaRepository mediaRepository;
     private final UserService userService;
     private final MediaMapper mediaMapper;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -51,6 +53,8 @@ public class LikeServiceImpl implements LikeService {
                     .build();
             likeRepository.save(like);
             liked = true;
+            
+            notificationService.createLikeNotification(media.getUser(), currentUser, media);
         }
 
         long likesCount = likeRepository.countByMediaId(mediaId);

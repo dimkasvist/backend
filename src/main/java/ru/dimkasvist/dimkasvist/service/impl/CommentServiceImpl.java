@@ -17,6 +17,7 @@ import ru.dimkasvist.dimkasvist.repository.CommentRepository;
 import ru.dimkasvist.dimkasvist.repository.MediaRepository;
 import ru.dimkasvist.dimkasvist.service.CommentLikeService;
 import ru.dimkasvist.dimkasvist.service.CommentService;
+import ru.dimkasvist.dimkasvist.service.NotificationService;
 import ru.dimkasvist.dimkasvist.service.UserService;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
     private final MediaRepository mediaRepository;
     private final UserService userService;
     private final CommentLikeService commentLikeService;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -46,6 +48,9 @@ public class CommentServiceImpl implements CommentService {
                 .build();
 
         Comment savedComment = commentRepository.save(comment);
+        
+        notificationService.createCommentNotification(media.getUser(), currentUser, media, savedComment);
+        
         return toResponse(savedComment, CommentLikeResponse.builder()
                 .likesCount(0)
                 .liked(false)

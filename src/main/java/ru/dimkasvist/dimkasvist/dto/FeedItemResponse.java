@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Builder
@@ -23,6 +24,7 @@ public class FeedItemResponse {
     private AuthorInfo author;
     private long likesCount;
     private long commentsCount;
+    private Set<String> tags;
 
     @Data
     @Builder

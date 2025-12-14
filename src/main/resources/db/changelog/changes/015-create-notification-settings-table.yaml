@@ -1,0 +1,89 @@
+databaseChangeLog:
+  - changeSet:
+      id: 015-create-notification-settings-table
+      author: dimkasvist
+      changes:
+        - createTable:
+            tableName: notification_settings
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: notifications_enabled
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email_notifications_enabled
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: like_notifications
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment_notifications
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment_like_notifications
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: new_pin_notifications
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+
+  - changeSet:
+      id: 015-notification-settings-foreign-keys
+      author: dimkasvist
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: notification_settings
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_notification_settings_user_id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 015-notification-settings-indexes
+      author: dimkasvist
+      changes:
+        - createIndex:
+            tableName: notification_settings
+            indexName: idx_notification_settings_user_id
+            unique: true
+            columns:
+              - column:
+                  name: user_id

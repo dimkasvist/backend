@@ -7,14 +7,17 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.dimkasvist.dimkasvist.dto.MediaResponse;
 import ru.dimkasvist.dimkasvist.dto.MediaUploadRequest;
 import ru.dimkasvist.dimkasvist.entity.Media;
+import ru.dimkasvist.dimkasvist.entity.Tag;
 import ru.dimkasvist.dimkasvist.entity.User;
 import ru.dimkasvist.dimkasvist.exception.FileStorageException;
 import ru.dimkasvist.dimkasvist.exception.ForbiddenException;
 import ru.dimkasvist.dimkasvist.exception.ResourceNotFoundException;
 import ru.dimkasvist.dimkasvist.mapper.MediaMapper;
 import ru.dimkasvist.dimkasvist.repository.MediaRepository;
+import ru.dimkasvist.dimkasvist.repository.TagRepository;
 import ru.dimkasvist.dimkasvist.service.FileStorageService;
 import ru.dimkasvist.dimkasvist.service.MediaService;
+import ru.dimkasvist.dimkasvist.service.NotificationService;
 import ru.dimkasvist.dimkasvist.service.UserService;
 
 import javax.imageio.ImageIO;
@@ -37,6 +40,8 @@ public class MediaServiceImpl implements MediaService {
     private final FileStorageService fileStorageService;
     private final MediaMapper mediaMapper;
     private final UserService userService;
+    private final TagRepository tagRepository;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -60,10 +65,19 @@ public class MediaServiceImpl implements MediaService {
             builder.width(dimensions.width()).height(dimensions.height());
         } else {
             builder.width(null).height(null);
-            // durationSeconds можно заполнить позже при интеграции видеопарсера
         }
 
-        Media saved = mediaRepository.save(builder.build());
+        Media media = builder.build();
+        
+        if (request.getTags() != null && !request.getTags().isEmpty()) {
+            Set<Tag> tags = processTags(request.getTags());
+            media.setTags(tags);
+        }
+
+        Media saved = mediaRepository.save(media);
+        
+        notificationService.createNewPinNotification(saved, currentUser);
+        
         return mediaMapper.toResponse(saved);
     }
 
@@ -124,4 +138,22 @@ public class MediaServiceImpl implements MediaService {
     }
 
     private record ImageDimensions(int width, int height) {}
+
+    private Set<Tag> processTags(Set<String> tagNames) {
+        Set<Tag> tags = new java.util.HashSet<>();
+        for (String tagName : tagNames) {
+            String normalizedName = tagName.toLowerCase().trim();
+            if (!normalizedName.isEmpty()) {
+                Tag tag = tagRepository.findByName(normalizedName)
+                        .orElseGet(() -> {
+                            Tag newTag = Tag.builder()
+                                    .name(normalizedName)
+                                    .build();
+                            return tagRepository.save(newTag);
+                        });
+                tags.add(tag);
+            }
+        }
+        return tags;
+    }
 }

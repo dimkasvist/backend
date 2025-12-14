@@ -1,0 +1,153 @@
+databaseChangeLog:
+  - changeSet:
+      id: 012-create-boards-table
+      author: dimkasvist
+      changes:
+        - createTable:
+            tableName: boards
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(1000)
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_private
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+
+  - changeSet:
+      id: 012-boards-foreign-keys
+      author: dimkasvist
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: boards
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_boards_user_id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 012-boards-indexes
+      author: dimkasvist
+      changes:
+        - createIndex:
+            tableName: boards
+            indexName: idx_boards_user_id
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: boards
+            indexName: idx_boards_is_private
+            columns:
+              - column:
+                  name: is_private
+        - createIndex:
+            tableName: boards
+            indexName: idx_boards_updated_at
+            columns:
+              - column:
+                  name: updated_at
+
+  - changeSet:
+      id: 012-create-board-media-table
+      author: dimkasvist
+      changes:
+        - createTable:
+            tableName: board_media
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: board_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: media_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: added_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 012-board-media-foreign-keys
+      author: dimkasvist
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: board_media
+            baseColumnNames: board_id
+            referencedTableName: boards
+            referencedColumnNames: id
+            constraintName: fk_board_media_board_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: board_media
+            baseColumnNames: media_id
+            referencedTableName: media
+            referencedColumnNames: id
+            constraintName: fk_board_media_media_id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 012-board-media-indexes
+      author: dimkasvist
+      changes:
+        - createIndex:
+            tableName: board_media
+            indexName: idx_board_media_board_id
+            columns:
+              - column:
+                  name: board_id
+        - createIndex:
+            tableName: board_media
+            indexName: idx_board_media_media_id
+            columns:
+              - column:
+                  name: media_id
+        - createIndex:
+            tableName: board_media
+            indexName: idx_board_media_added_at
+            columns:
+              - column:
+                  name: added_at
+        - addUniqueConstraint:
+            tableName: board_media
+            columnNames: board_id, media_id
+            constraintName: uk_board_media_board_media

@@ -1,0 +1,13 @@
+Dockerfile
+.dockerignore
+.git
+.gitignore
+.gradle
+build
+.idea
+.vscode
+*.md
+.env
+.env.local
+*.log
+target
