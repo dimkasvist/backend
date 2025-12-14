@@ -48,6 +48,7 @@ spring:
 app:
   s3:
     endpoint: ${S3_ENDPOINT:http://localhost:9000}
+    public-url: ${S3_PUBLIC_URL:}
     region: ${S3_REGION:us-east-1}
     bucket: ${S3_BUCKET:dimkasvist}
     access-key: ${S3_ACCESS_KEY:minioadmin}

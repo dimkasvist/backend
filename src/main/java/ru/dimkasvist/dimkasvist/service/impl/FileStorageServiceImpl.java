@@ -68,7 +68,10 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public String getFileUrl(String fileName) {
-        return s3Properties.getEndpoint() + "/" + s3Properties.getBucket() + "/" + fileName;
+        String baseUrl = s3Properties.getPublicUrl() != null && !s3Properties.getPublicUrl().isEmpty()
+                ? s3Properties.getPublicUrl()
+                : s3Properties.getEndpoint();
+        return baseUrl + "/" + s3Properties.getBucket() + "/" + fileName;
     }
 
     @Override

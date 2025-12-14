@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class S3Properties {
 
     private String endpoint;
+    private String publicUrl;
     private String region;
     private String bucket;
     private String accessKey;
