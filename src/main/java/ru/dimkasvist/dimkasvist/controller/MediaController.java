@@ -1,5 +1,6 @@
 package ru.dimkasvist.dimkasvist.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.dimkasvist.dimkasvist.dto.FeedResponse;
 import ru.dimkasvist.dimkasvist.dto.MediaResponse;
+import ru.dimkasvist.dimkasvist.dto.MediaUpdateRequest;
 import ru.dimkasvist.dimkasvist.dto.MediaUploadRequest;
 import ru.dimkasvist.dimkasvist.dto.SearchResponse;
 import ru.dimkasvist.dimkasvist.service.FeedService;
@@ -54,6 +56,15 @@ public class MediaController {
     @GetMapping("/{id}")
     public ResponseEntity<@NonNull MediaResponse> getMedia(@PathVariable Long id) {
         MediaResponse response = mediaService.getById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<@NonNull MediaResponse> updateMedia(
+            @PathVariable Long id,
+            @Valid @RequestBody MediaUpdateRequest request
+    ) {
+        MediaResponse response = mediaService.update(id, request);
         return ResponseEntity.ok(response);
     }
 

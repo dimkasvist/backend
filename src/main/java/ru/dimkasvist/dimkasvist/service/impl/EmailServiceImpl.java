@@ -24,9 +24,9 @@ public class EmailServiceImpl implements EmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
-            message.setSubject("New Like on Your Pin");
+            message.setSubject("Новая оценка вашего пина");
             message.setText(String.format(
-                    "Hello!\n\n%s liked your pin \"%s\".\n\nCheck it out on DimkasList!",
+                    "Привет!\n\n%s оценил ваш пин \"%s\".\n\nПроверьте на DimkasList!",
                     actorName, mediaTitle
             ));
             mailSender.send(message);
@@ -42,9 +42,9 @@ public class EmailServiceImpl implements EmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
-            message.setSubject("New Comment on Your Pin");
+            message.setSubject("Новый комментарий к вашему пину");
             message.setText(String.format(
-                    "Hello!\n\n%s commented on your pin \"%s\":\n\n\"%s\"\n\nCheck it out on DimkasList!",
+                    "Привет!\n\n%s прокомментировал ваш пин \"%s\":\n\n\"%s\"\n\nПроверьте на DimkasList!",
                     actorName, mediaTitle, commentText
             ));
             mailSender.send(message);
@@ -60,9 +60,9 @@ public class EmailServiceImpl implements EmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
-            message.setSubject("Someone Liked Your Comment");
+            message.setSubject("Оценка вашего комментария");
             message.setText(String.format(
-                    "Hello!\n\n%s liked your comment.\n\nCheck it out on DimkasList!",
+                    "Привет!\n\n%s оценил ваш комментарий.\n\nПроверьте на DimkasList!",
                     actorName
             ));
             mailSender.send(message);
@@ -83,9 +83,9 @@ public class EmailServiceImpl implements EmailService {
 
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(fullRecipient.getEmail());
-            message.setSubject("New Pin from " + authorName);
+            message.setSubject("Новый пин от " + authorName);
             message.setText(String.format(
-                    "Hello!\n\n%s posted a new pin \"%s\".\n\nCheck it out on DimkasList!",
+                    "Привет!\n\n%s опубликовал новый пин \"%s\".\n\nПроверьте на DimkasList!",
                     authorName, mediaTitle
             ));
             mailSender.send(message);

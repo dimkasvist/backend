@@ -29,13 +29,13 @@ public class NotificationMapper {
     }
 
     private String buildMessage(Notification notification) {
-        String actorName = notification.getActor() != null ? notification.getActor().getDisplayName() : "Someone";
+        String actorName = notification.getActor() != null ? notification.getActor().getDisplayName() : "Кто-то";
         
         return switch (notification.getType()) {
-            case LIKE -> actorName + " liked your pin";
-            case COMMENT -> actorName + " commented on your pin";
-            case COMMENT_LIKE -> actorName + " liked your comment";
-            case NEW_PIN_FROM_FOLLOWING -> actorName + " posted a new pin";
+            case LIKE -> actorName + " оценил ваш пин";
+            case COMMENT -> actorName + " прокомментировал ваш пин";
+            case COMMENT_LIKE -> actorName + " оценил ваш комментарий";
+            case NEW_PIN_FROM_FOLLOWING -> actorName + " опубликовал новый пин";
         };
     }
 

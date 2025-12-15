@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.dimkasvist.dimkasvist.dto.MediaResponse;
+import ru.dimkasvist.dimkasvist.dto.MediaUpdateRequest;
 import ru.dimkasvist.dimkasvist.dto.MediaUploadRequest;
 import ru.dimkasvist.dimkasvist.entity.Media;
 import ru.dimkasvist.dimkasvist.entity.Tag;
@@ -87,6 +88,24 @@ public class MediaServiceImpl implements MediaService {
         Media media = mediaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Media not found with id: " + id));
         return mediaMapper.toResponse(media);
+    }
+
+    @Override
+    @Transactional
+    public MediaResponse update(Long id, MediaUpdateRequest request) {
+        Media media = mediaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Media not found with id: " + id));
+
+        User currentUser = userService.getCurrentUser();
+        if (!media.getUser().getId().equals(currentUser.getId())) {
+            throw new ForbiddenException("You can only update your own media");
+        }
+
+        media.setTitle(request.getTitle());
+        media.setDescription(request.getDescription());
+
+        Media updated = mediaRepository.save(media);
+        return mediaMapper.toResponse(updated);
     }
 
     @Override
