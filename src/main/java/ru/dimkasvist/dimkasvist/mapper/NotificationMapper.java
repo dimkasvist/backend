@@ -32,10 +32,10 @@ public class NotificationMapper {
         String actorName = notification.getActor() != null ? notification.getActor().getDisplayName() : "Кто-то";
         
         return switch (notification.getType()) {
-            case LIKE -> actorName + " оценил ваш пин";
-            case COMMENT -> actorName + " прокомментировал ваш пин";
+            case LIKE -> actorName + " оценил ваш дим";
+            case COMMENT -> actorName + " прокомментировал ваш дим";
             case COMMENT_LIKE -> actorName + " оценил ваш комментарий";
-            case NEW_PIN_FROM_FOLLOWING -> actorName + " опубликовал новый пин";
+            case NEW_PIN_FROM_FOLLOWING -> actorName + " опубликовал новый дим";
         };
     }
 

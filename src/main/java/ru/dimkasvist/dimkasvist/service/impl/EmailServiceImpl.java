@@ -24,9 +24,9 @@ public class EmailServiceImpl implements EmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
-            message.setSubject("Новая оценка вашего пина");
+            message.setSubject("Новая оценка вашего дима");
             message.setText(String.format(
-                    "Привет!\n\n%s оценил ваш пин \"%s\".\n\nПроверьте на DimkasList!",
+                    "Привет!\n\n%s оценил ваш дим \"%s\".\n\nПроверьте на DimkasList!",
                     actorName, mediaTitle
             ));
             mailSender.send(message);
@@ -42,9 +42,9 @@ public class EmailServiceImpl implements EmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
-            message.setSubject("Новый комментарий к вашему пину");
+            message.setSubject("Новый комментарий к вашему диму");
             message.setText(String.format(
-                    "Привет!\n\n%s прокомментировал ваш пин \"%s\":\n\n\"%s\"\n\nПроверьте на DimkasList!",
+                    "Привет!\n\n%s прокомментировал ваш дим \"%s\":\n\n\"%s\"\n\nПроверьте на DimkasList!",
                     actorName, mediaTitle, commentText
             ));
             mailSender.send(message);
@@ -83,9 +83,9 @@ public class EmailServiceImpl implements EmailService {
 
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(fullRecipient.getEmail());
-            message.setSubject("Новый пин от " + authorName);
+            message.setSubject("Новый дим от " + authorName);
             message.setText(String.format(
-                    "Привет!\n\n%s опубликовал новый пин \"%s\".\n\nПроверьте на DimkasList!",
+                    "Привет!\n\n%s опубликовал новый дим \"%s\".\n\nПроверьте на DimkasList!",
                     authorName, mediaTitle
             ));
             mailSender.send(message);
