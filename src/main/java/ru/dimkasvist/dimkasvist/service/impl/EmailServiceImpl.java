@@ -94,4 +94,22 @@ public class EmailServiceImpl implements EmailService {
             log.error("Failed to send new pin notification email", e);
         }
     }
+
+    @Override
+    @Async
+    public void sendFollowNotification(String email, String followerName) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(email);
+            message.setSubject("Новый подписчик");
+            message.setText(String.format(
+                    "Привет!\n\n%s подписался на вас.\n\nПроверьте на DimkasList!",
+                    followerName
+            ));
+            mailSender.send(message);
+            log.info("Follow notification email sent to: {}", email);
+        } catch (Exception e) {
+            log.error("Failed to send follow notification email to: {}", email, e);
+        }
+    }
 }

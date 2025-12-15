@@ -29,3 +29,5 @@ databaseChangeLog:
       file: db/changelog/changes/014-create-notifications-table.yaml
   - include:
       file: db/changelog/changes/015-create-notification-settings-table.yaml
+  - include:
+      file: db/changelog/changes/016-add-follow-notifications-column.yaml

@@ -50,6 +50,9 @@ public class NotificationSettingsServiceImpl implements NotificationSettingsServ
         if (request.getNewPinNotifications() != null) {
             settings.setNewPinNotifications(request.getNewPinNotifications());
         }
+        if (request.getFollowNotifications() != null) {
+            settings.setFollowNotifications(request.getFollowNotifications());
+        }
 
         NotificationSettings updated = settingsRepository.save(settings);
         return toResponse(updated);
@@ -74,6 +77,7 @@ public class NotificationSettingsServiceImpl implements NotificationSettingsServ
                 .commentNotifications(settings.getCommentNotifications())
                 .commentLikeNotifications(settings.getCommentLikeNotifications())
                 .newPinNotifications(settings.getNewPinNotifications())
+                .followNotifications(settings.getFollowNotifications())
                 .build();
     }
 }

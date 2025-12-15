@@ -36,6 +36,7 @@ public class NotificationMapper {
             case COMMENT -> actorName + " прокомментировал ваш дим";
             case COMMENT_LIKE -> actorName + " оценил ваш комментарий";
             case NEW_PIN_FROM_FOLLOWING -> actorName + " опубликовал новый дим";
+            case FOLLOW -> actorName + " подписался на вас";
         };
     }
 

@@ -15,7 +15,7 @@ import ru.dimkasvist.dimkasvist.exception.ResourceNotFoundException;
 import ru.dimkasvist.dimkasvist.repository.FollowRepository;
 import ru.dimkasvist.dimkasvist.repository.UserRepository;
 import ru.dimkasvist.dimkasvist.service.FollowService;
-import ru.dimkasvist.dimkasvist.service.UserService;
+import ru.dimkasvist.dimkasvist.service.NotificationService;import ru.dimkasvist.dimkasvist.service.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +27,7 @@ public class FollowServiceImpl implements FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -50,6 +51,9 @@ public class FollowServiceImpl implements FollowService {
                 .build();
 
         Follow saved = followRepository.save(follow);
+        
+        notificationService.createFollowNotification(userToFollow, currentUser);
+        
         return toResponse(saved, userToFollow);
     }
 

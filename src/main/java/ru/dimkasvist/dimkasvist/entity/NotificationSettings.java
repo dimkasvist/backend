@@ -48,6 +48,10 @@ public class NotificationSettings {
     @Builder.Default
     private Boolean newPinNotifications = true;
 
+    @Column(name = "follow_notifications", nullable = false)
+    @Builder.Default
+    private Boolean followNotifications = true;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

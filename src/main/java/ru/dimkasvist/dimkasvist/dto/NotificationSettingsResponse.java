@@ -17,4 +17,5 @@ public class NotificationSettingsResponse {
     private Boolean commentNotifications;
     private Boolean commentLikeNotifications;
     private Boolean newPinNotifications;
+    private Boolean followNotifications;
 }

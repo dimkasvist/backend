@@ -140,6 +140,31 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    @Transactional
+    public void createFollowNotification(User recipient, User follower) {
+        if (recipient.getId().equals(follower.getId())) {
+            return;
+        }
+
+        NotificationSettings settings = getOrCreateSettings(recipient);
+        if (!settings.getNotificationsEnabled() || !settings.getFollowNotifications()) {
+            return;
+        }
+
+        Notification notification = Notification.builder()
+                .user(recipient)
+                .type(Notification.NotificationType.FOLLOW)
+                .actor(follower)
+                .build();
+
+        notificationRepository.save(notification);
+
+        if (settings.getEmailNotificationsEnabled()) {
+            emailService.sendFollowNotification(recipient.getEmail(), follower.getDisplayName());
+        }
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public NotificationsResponse getNotifications(int page, int size) {
         User currentUser = userService.getCurrentUser();

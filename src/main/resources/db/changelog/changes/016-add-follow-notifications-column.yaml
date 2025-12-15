@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 016-add-follow-notifications-column
+      author: dimkasvist
+      changes:
+        - addColumn:
+            tableName: notification_settings
+            columns:
+              - column:
+                  name: follow_notifications
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false

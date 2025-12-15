@@ -56,6 +56,7 @@ public class Notification {
         LIKE,
         COMMENT,
         COMMENT_LIKE,
-        NEW_PIN_FROM_FOLLOWING
+        NEW_PIN_FROM_FOLLOWING,
+        FOLLOW
     }
 }
