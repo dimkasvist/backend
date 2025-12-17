@@ -35,6 +35,15 @@ public class CommentController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("/api/comments/{commentId}")
+    public ResponseEntity<CommentResponse> updateComment(
+            @PathVariable Long commentId,
+            @Valid @RequestBody CommentRequest request
+    ) {
+        CommentResponse response = commentService.updateComment(commentId, request);
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/api/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);

@@ -10,5 +10,7 @@ public interface CommentService {
 
     CommentsResponse getComments(Long mediaId, String cursor, int size);
 
+    CommentResponse updateComment(Long commentId, CommentRequest request);
+
     void deleteComment(Long commentId);
 }

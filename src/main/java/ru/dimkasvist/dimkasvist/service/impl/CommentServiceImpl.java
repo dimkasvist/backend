@@ -113,6 +113,24 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
+    public CommentResponse updateComment(Long commentId, CommentRequest request) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id: " + commentId));
+
+        User currentUser = userService.getCurrentUser();
+        if (!comment.getUser().getId().equals(currentUser.getId())) {
+            throw new ForbiddenException("You can only edit your own comments");
+        }
+
+        comment.setText(request.getText());
+        Comment updatedComment = commentRepository.save(comment);
+
+        CommentLikeResponse likeInfo = commentLikeService.getLikeInfo(List.of(commentId)).get(commentId);
+        return toResponse(updatedComment, likeInfo);
+    }
+
+    @Override
+    @Transactional
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id: " + commentId));
