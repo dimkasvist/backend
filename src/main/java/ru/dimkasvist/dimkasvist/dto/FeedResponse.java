@@ -9,9 +9,6 @@ import java.util.List;
 @Builder
 public class FeedResponse {
 
-    /**
-     * Список элементов ленты (фото или видео).
-     */
     private List<FeedItemResponse> items;
 
     private String nextCursor;
