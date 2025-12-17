@@ -2,6 +2,7 @@ package ru.dimkasvist.dimkasvist.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -11,6 +12,7 @@ import ru.dimkasvist.dimkasvist.repository.UserRepository;
 import ru.dimkasvist.dimkasvist.service.EmailService;
 
 @Service
+@ConditionalOnProperty(name = "spring.mail.host")
 @RequiredArgsConstructor
 @Slf4j
 public class EmailServiceImpl implements EmailService {
