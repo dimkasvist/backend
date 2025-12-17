@@ -1,6 +1,8 @@
 package ru.dimkasvist.dimkasvist.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.dimkasvist.dimkasvist.dto.CommentLikeResponse;
@@ -10,6 +12,7 @@ import ru.dimkasvist.dimkasvist.entity.User;
 import ru.dimkasvist.dimkasvist.exception.ResourceNotFoundException;
 import ru.dimkasvist.dimkasvist.repository.CommentLikeRepository;
 import ru.dimkasvist.dimkasvist.repository.CommentRepository;
+import ru.dimkasvist.dimkasvist.security.GoogleUserPrincipal;
 import ru.dimkasvist.dimkasvist.service.CommentLikeService;
 import ru.dimkasvist.dimkasvist.service.NotificationService;
 import ru.dimkasvist.dimkasvist.service.UserService;
@@ -87,23 +90,29 @@ public class CommentLikeServiceImpl implements CommentLikeService {
             return Map.of();
         }
 
-        User currentUser = userService.getCurrentUser();
-
         Map<Long, Long> counts = commentLikeRepository.countByCommentIds(commentIds).stream()
                 .collect(Collectors.toMap(
                         CommentLikeRepository.CommentLikeCount::getCommentId,
                         CommentLikeRepository.CommentLikeCount::getLikesCount
                 ));
 
-        Set<Long> likedCommentIds = commentLikeRepository.findLikedCommentIds(currentUser.getId(), commentIds).stream()
-                .collect(Collectors.toSet());
+        Set<Long> likedCommentIds = Set.of();
+        
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() 
+                && authentication.getPrincipal() instanceof GoogleUserPrincipal) {
+            User currentUser = userService.getCurrentUser();
+            likedCommentIds = commentLikeRepository.findLikedCommentIds(currentUser.getId(), commentIds).stream()
+                    .collect(Collectors.toSet());
+        }
 
+        final Set<Long> finalLikedCommentIds = likedCommentIds;
         return commentIds.stream()
                 .collect(Collectors.toMap(
                         Function.identity(),
                         id -> CommentLikeResponse.builder()
                                 .likesCount(counts.getOrDefault(id, 0L))
-                                .liked(likedCommentIds.contains(id))
+                                .liked(finalLikedCommentIds.contains(id))
                                 .build()
                 ));
     }

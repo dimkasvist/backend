@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/media/feed").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/media/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/media/{mediaId}/comments").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/media/{mediaId}/likes").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/{id}/likes").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/media/search").permitAll()
@@ -45,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/follow/{userId}/following").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/follow/{userId}/stats").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(googleTokenFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,15 +1,20 @@
 package ru.dimkasvist.dimkasvist.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.dimkasvist.dimkasvist.dto.UserResponse;
+import ru.dimkasvist.dimkasvist.dto.UsersSearchResponse;
 import ru.dimkasvist.dimkasvist.entity.User;
 import ru.dimkasvist.dimkasvist.exception.ResourceNotFoundException;
 import ru.dimkasvist.dimkasvist.repository.UserRepository;
 import ru.dimkasvist.dimkasvist.security.GoogleUserPrincipal;
 import ru.dimkasvist.dimkasvist.service.UserService;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -64,5 +69,27 @@ public class UserServiceImpl implements UserService {
                 .avatarUrl(user.getAvatarUrl())
                 .createdAt(user.getCreatedAt())
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UsersSearchResponse searchUsers(String query, Pageable pageable) {
+        Page<User> usersPage = userRepository.searchUsers(query, pageable);
+        
+        List<UserResponse> userResponses = usersPage.getContent().stream()
+                .map(user -> UserResponse.builder()
+                        .id(user.getId())
+                        .displayName(user.getDisplayName())
+                        .avatarUrl(user.getAvatarUrl())
+                        .createdAt(user.getCreatedAt())
+                        .build())
+                .toList();
+
+        return new UsersSearchResponse(
+                userResponses,
+                usersPage.getNumber(),
+                usersPage.getTotalPages(),
+                usersPage.getTotalElements()
+        );
     }
 }

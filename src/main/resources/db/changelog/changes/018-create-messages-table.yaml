@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - changeSet:
+      id: 018-create-messages-table
+      author: dimkasvist
+      changes:
+        - createTable:
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: chat_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sender_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content
+                  type: text
+              - column:
+                  name: message_type
+                  type: varchar(20)
+                  defaultValue: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: attachment_url
+                  type: varchar(1000)
+              - column:
+                  name: is_edited
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+
+  - changeSet:
+      id: 018-messages-foreign-keys
+      author: dimkasvist
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: messages
+            baseColumnNames: chat_id
+            referencedTableName: chats
+            referencedColumnNames: id
+            constraintName: fk_messages_chat_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: messages
+            baseColumnNames: sender_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_messages_sender_id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 018-messages-indexes
+      author: dimkasvist
+      changes:
+        - createIndex:
+            tableName: messages
+            indexName: idx_messages_chat_id_created_at
+            columns:
+              - column:
+                  name: chat_id
+              - column:
+                  name: created_at
+                  descending: true
+        - createIndex:
+            tableName: messages
+            indexName: idx_messages_sender_id
+            columns:
+              - column:
+                  name: sender_id

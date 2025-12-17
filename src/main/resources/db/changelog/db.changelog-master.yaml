@@ -30,4 +30,10 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/015-create-notification-settings-table.yaml
   - include:
-      file: db/changelog/changes/016-add-follow-notifications-column.yaml
+      file: db/changelog/changes/017-create-chats-table.yaml
+  - include:
+      file: db/changelog/changes/018-create-messages-table.yaml
+  - include:
+      file: db/changelog/changes/019-create-message-status-table.yaml
+  - include:
+      file: db/changelog/changes/020-add-shared-media-id-to-messages.yaml

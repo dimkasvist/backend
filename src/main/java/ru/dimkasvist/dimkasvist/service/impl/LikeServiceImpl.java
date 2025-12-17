@@ -2,6 +2,8 @@ package ru.dimkasvist.dimkasvist.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.dimkasvist.dimkasvist.dto.FeedItemResponse;
@@ -14,6 +16,7 @@ import ru.dimkasvist.dimkasvist.exception.ResourceNotFoundException;
 import ru.dimkasvist.dimkasvist.mapper.MediaMapper;
 import ru.dimkasvist.dimkasvist.repository.LikeRepository;
 import ru.dimkasvist.dimkasvist.repository.MediaRepository;
+import ru.dimkasvist.dimkasvist.security.GoogleUserPrincipal;
 import ru.dimkasvist.dimkasvist.service.LikeService;
 import ru.dimkasvist.dimkasvist.service.NotificationService;
 import ru.dimkasvist.dimkasvist.service.UserService;
@@ -72,8 +75,14 @@ public class LikeServiceImpl implements LikeService {
             throw new ResourceNotFoundException("Media not found with id: " + mediaId);
         }
 
-        User currentUser = userService.getCurrentUser();
-        boolean liked = likeRepository.existsByUserIdAndMediaId(currentUser.getId(), mediaId);
+        boolean liked = false;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() 
+                && authentication.getPrincipal() instanceof GoogleUserPrincipal) {
+            User currentUser = userService.getCurrentUser();
+            liked = likeRepository.existsByUserIdAndMediaId(currentUser.getId(), mediaId);
+        }
+        
         long likesCount = likeRepository.countByMediaId(mediaId);
 
         return LikeResponse.builder()

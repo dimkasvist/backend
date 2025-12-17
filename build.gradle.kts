@@ -32,6 +32,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-liquibase")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("com.google.api-client:google-api-client:2.7.0")
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation(platform("software.amazon.awssdk:bom:2.29.6"))

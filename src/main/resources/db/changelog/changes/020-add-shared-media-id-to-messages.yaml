@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 020-add-shared-media-id-to-messages
+      author: dimkasvist
+      changes:
+        - addColumn:
+            tableName: messages
+            columns:
+              - column:
+                  name: shared_media_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      id: 020-add-shared-media-id-foreign-key
+      author: dimkasvist
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: messages
+            baseColumnNames: shared_media_id
+            referencedTableName: media
+            referencedColumnNames: id
+            constraintName: fk_messages_shared_media_id
+            onDelete: SET NULL
+
+  - changeSet:
+      id: 020-add-shared-media-id-index
+      author: dimkasvist
+      changes:
+        - createIndex:
+            tableName: messages
+            indexName: idx_messages_shared_media_id
+            columns:
+              - column:
+                  name: shared_media_id

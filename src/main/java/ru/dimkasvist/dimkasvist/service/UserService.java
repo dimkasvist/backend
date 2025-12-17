@@ -1,6 +1,8 @@
 package ru.dimkasvist.dimkasvist.service;
 
+import org.springframework.data.domain.Pageable;
 import ru.dimkasvist.dimkasvist.dto.UserResponse;
+import ru.dimkasvist.dimkasvist.dto.UsersSearchResponse;
 import ru.dimkasvist.dimkasvist.entity.User;
 
 public interface UserService {
@@ -10,4 +12,6 @@ public interface UserService {
     User getCurrentUser();
 
     UserResponse getUserById(Long id);
+
+    UsersSearchResponse searchUsers(String query, Pageable pageable);
 }

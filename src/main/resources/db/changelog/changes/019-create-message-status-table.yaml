@@ -1,0 +1,84 @@
+databaseChangeLog:
+  - changeSet:
+      id: 019-create-message-status-table
+      author: dimkasvist
+      changes:
+        - createTable:
+            tableName: message_status
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: message_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_delivered
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_read
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: delivered_at
+                  type: timestamp
+              - column:
+                  name: read_at
+                  type: timestamp
+
+  - changeSet:
+      id: 019-message-status-foreign-keys
+      author: dimkasvist
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: message_status
+            baseColumnNames: message_id
+            referencedTableName: messages
+            referencedColumnNames: id
+            constraintName: fk_message_status_message_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: message_status
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_message_status_user_id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 019-message-status-indexes
+      author: dimkasvist
+      changes:
+        - createIndex:
+            tableName: message_status
+            indexName: idx_message_status_message_user
+            unique: true
+            columns:
+              - column:
+                  name: message_id
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: message_status
+            indexName: idx_message_status_user_id_read
+            columns:
+              - column:
+                  name: user_id
+              - column:
+                  name: is_read
