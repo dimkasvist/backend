@@ -8,6 +8,10 @@ spring:
     password: ${POSTGRES_PASSWORD:dimkasvist}
     driver-class-name: org.postgresql.Driver
 
+server:
+  forward-headers-strategy: framework
+  port: ${SERVER_PORT:8080}
+
   config:
     import: optional:file:.env[.properties]
 
